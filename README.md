@@ -1,12 +1,7 @@
-## Installation
-
-## Install virtualenv
-- pip install virtualenv
-
+## API soccer stats
 ## Install virtualenv
 - pip install virtualenv
 - flask/bin/pip install flask
 
-## RUN server
-On cmd
+## RUN server (on cmd)
 - ./app.py
