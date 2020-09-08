@@ -25,7 +25,15 @@ def allCountries():
 
 def nextMeet():
     global match
-    API_FOOT_ENDPOINT.request("GET", "/fixtures?league=39&season=2020", headers=headers)
+    API_FOOT_ENDPOINT.request("GET", "/fixtures?league=61&season=2020", headers=headers)
+    res = API_FOOT_ENDPOINT.getresponse()
+    data = res.read()
+    jsonData = json.loads((data.decode("utf-8")))
+    return jsonData
+
+def allLeagues():
+    global match
+    API_FOOT_ENDPOINT.request("GET", "/leagues", headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
     jsonData = json.loads((data.decode("utf-8")))
@@ -68,6 +76,10 @@ def get_countries():
 @app.route('/api/v1.0/headtohead', methods=['GET'])
 def get_headtohead():
     return headToHead("33","34")
+
+@app.route('/api/v1.0/leagues', methods=['GET'])
+def get_leagues():
+    return allLeagues()
     
 
 if __name__ == '__main__':
