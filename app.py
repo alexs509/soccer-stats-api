@@ -23,9 +23,9 @@ def allCountries():
     jsonData = json.loads((data.decode("utf-8")))
     return jsonData
 
-def allTeams():
+def nextMeet():
     global match
-    API_FOOT_ENDPOINT.request("GET", "/teams", headers=headers)
+    API_FOOT_ENDPOINT.request("GET", "/fixtures?league=39&season=2020", headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
     jsonData = json.loads((data.decode("utf-8")))
@@ -53,9 +53,9 @@ def headToHead(x,y):
 def index():
     return "Server run !"
 
-@app.route('/api/v1.0/teams', methods=['GET'])
-def get_teams():
-    return allTeams()
+@app.route('/api/v1.0/next-match', methods=['GET'])
+def next_meet():
+    return nextMeet()
 
 @app.route('/api/v1.0/teams-stats', methods=['GET'])
 def teams_stats():
