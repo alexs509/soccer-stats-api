@@ -125,7 +125,9 @@ def get_countries():
 
 @app.route('/api/v1.0/headtohead', methods=['GET'])
 def get_headtohead():
-    return headToHead("33", "34")
+    team1 = request.args.get('team1')
+    team2 = request.args.get('team2')
+    return headToHead(team1,team2)
 
 
 @app.route('/api/v1.0/leagues', methods=['GET'])
