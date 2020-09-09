@@ -20,7 +20,7 @@ app = Flask(__name__)
 API_FOOT_ENDPOINT = http.client.HTTPSConnection("v3.football.api-sports.io")
 headers = {
     'x-rapidapi-host': "v3.football.api-sports.io",
-    'x-rapidapi-key': "95c3d7658782b5b0c76c71ffe9b6360b"
+    'x-rapidapi-key': "4d9722c621b948f9b2c1f1dd88067f68"
 }
 match = None
 
