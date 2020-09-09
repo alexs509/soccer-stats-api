@@ -60,7 +60,7 @@ def allLeagues():
 
 def teamsStats(x):
     global match
-    API_FOOT_ENDPOINT.request("GET", "/teams?id="+x, headers=headers)
+    API_FOOT_ENDPOINT.request("GET", "/teams/statistics?league=61&season=2020&team="+x, headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
     API_FOOT_ENDPOINT.close()
