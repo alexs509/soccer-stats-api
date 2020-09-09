@@ -115,7 +115,8 @@ def next_meet():
 
 @app.route('/api/v1.0/teams-stats', methods=['GET'])
 def teams_stats():
-    return teamsStats("33")
+    team = request.args.get('team')
+    return teamsStats(team)
 
 
 @app.route('/api/v1.0/countries', methods=['GET'])
