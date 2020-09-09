@@ -32,6 +32,7 @@ def allCountries():
     API_FOOT_ENDPOINT.request("GET", "/countries", headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
+    API_FOOT_ENDPOINT.close()
     jsonData = json.loads((data.decode("utf-8")))
     return jsonData
 
@@ -42,6 +43,7 @@ def nextMeet():
         "GET", "/fixtures?league=61&season=2020", headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
+    API_FOOT_ENDPOINT.close()
     jsonData = json.loads((data.decode("utf-8")))
     return jsonData
 
@@ -51,6 +53,7 @@ def allLeagues():
     API_FOOT_ENDPOINT.request("GET", "/leagues", headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
+    API_FOOT_ENDPOINT.close()
     jsonData = json.loads((data.decode("utf-8")))
     return jsonData
 
@@ -60,6 +63,7 @@ def teamsStats(x):
     API_FOOT_ENDPOINT.request("GET", "/teams?id="+x, headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
+    API_FOOT_ENDPOINT.close()
     jsonData = json.loads((data.decode("utf-8")))
     return jsonData
 
@@ -70,6 +74,7 @@ def headToHead(x, y):
         "GET", "/fixtures/headtohead?h2h="+x+"-"+y, headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
+    API_FOOT_ENDPOINT.close()
     jsonData = json.loads((data.decode("utf-8")))
     return jsonData
 
