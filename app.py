@@ -20,7 +20,7 @@ app = Flask(__name__)
 API_FOOT_ENDPOINT = http.client.HTTPSConnection("v3.football.api-sports.io")
 headers = {
     'x-rapidapi-host': "v3.football.api-sports.io",
-    'x-rapidapi-key': "4d9722c621b948f9b2c1f1dd88067f68"
+    'x-rapidapi-key': "c8ba2608a4945269ae8378865c55cbb5"
 }
 match = None
 
@@ -30,6 +30,15 @@ match = None
 def allCountries():
     global match
     API_FOOT_ENDPOINT.request("GET", "/countries", headers=headers)
+    res = API_FOOT_ENDPOINT.getresponse()
+    data = res.read()
+    API_FOOT_ENDPOINT.close()
+    jsonData = json.loads((data.decode("utf-8")))
+    return jsonData
+
+def ranking():
+    global match
+    API_FOOT_ENDPOINT.request("GET", "/standings?league=61&season=2020", headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
     API_FOOT_ENDPOINT.close()
@@ -122,6 +131,10 @@ def teams_stats():
 @app.route('/api/v1.0/countries', methods=['GET'])
 def get_countries():
     return allCountries()
+
+@app.route('/api/v1.0/ranking', methods=['GET'])
+def get_ranking():
+    return ranking()
 
 
 @app.route('/api/v1.0/headtohead', methods=['GET'])
