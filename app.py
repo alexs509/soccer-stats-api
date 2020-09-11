@@ -97,10 +97,10 @@ def headToHead(x, y):
 
 def connection(username, password):
     checkUser = users.find_one({'username': username})
-
-    if checkUser.get('password') == password:
-        valueReturn = jwt.encode(
-            {'some': 'payload'}, 'secret', algorithm='HS256')
+    if checkUser == None: 
+        return {"result": "error"}
+    elif checkUser.get('password') == password:
+        valueReturn = jwt.encode({'some': 'payload'}, 'secret', algorithm='HS256')
     else:
         return {"result": "error"}
 
