@@ -3,30 +3,31 @@ import http.client
 import json
 from pymongo import MongoClient
 import jwt
+from flask_cors import CORS
+
 
 
 """ --- Connection at DB --- """
 
-client = MongoClient(
-    'mongodb://admin:admin@127.0.0.1:27017/foot?authSource=admin')
-db = client['foot']
+client = MongoClient('localhost', 27017)
+db = client.foot
+users = db['users']
 
-users = db.users
 
 """ --- Declare global variable --- """
 
 app = Flask(__name__)
-
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+match = None
 API_FOOT_ENDPOINT = http.client.HTTPSConnection("v3.football.api-sports.io")
 headers = {
     'x-rapidapi-host': "v3.football.api-sports.io",
-    'x-rapidapi-key': "4d9722c621b948f9b2c1f1dd88067f68"
+    'x-rapidapi-key': "86c4c54e5372c1e8f78a5c32ae8122f2"
 }
-match = None
+
 
 """ --- Global functions --- """
-
-
 def allCountries():
     global match
     API_FOOT_ENDPOINT.request("GET", "/countries", headers=headers)
@@ -48,8 +49,7 @@ def ranking():
 
 def nextMeet():
     global match
-    API_FOOT_ENDPOINT.request(
-        "GET", "/fixtures?league=61&season=2020", headers=headers)
+    API_FOOT_ENDPOINT.request("GET", "/fixtures?league=61&season=2020", headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
     API_FOOT_ENDPOINT.close()
@@ -90,28 +90,25 @@ def headToHead(x, y):
 
 def connection(username, password):
     checkUser = users.find_one({'username': username})
-
+    
     if checkUser.get('password') == password:
-        valueReturn = jwt.encode(
-            {'some': 'payload'}, 'secret', algorithm='HS256')
+        valueReturn = jwt.encode({'some': 'payload'}, 'secret', algorithm='HS256')
     else:
-        valueReturn = 'error'
+        return {"result":"error"}
 
     return valueReturn
 
 
 def inscription(username, password):
-    if username != None or password != None:
+    if username != None and password != None:
         users.insert_one(
             {"username": username, "password": password})
-        return 'added'
+        return {"result":"added"}
     else:
-        return 'error value'
+        return {"result":"error"}
 
 
 """ --- Routes --- """
-
-
 @app.route('/')
 def index():
     return "Server run !"
