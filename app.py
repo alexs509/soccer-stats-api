@@ -4,10 +4,13 @@ import json
 from pymongo import MongoClient
 import jwt
 from flask_cors import CORS
+import statistics
 
 
 """ --- Connection at DB --- """
-
+#if docker user =>
+#client = MongoClient('mongodb://admin:admin@127.0.0.1:27017/foot?authSource=admin')
+#else if docker on local machine use =>
 client = MongoClient('localhost', 27017)
 db = client.foot
 users = db['users']
@@ -24,12 +27,22 @@ match = None
 API_FOOT_ENDPOINT = http.client.HTTPSConnection("v3.football.api-sports.io")
 headers = {
     'x-rapidapi-host': "v3.football.api-sports.io",
-    'x-rapidapi-key': "86c4c54e5372c1e8f78a5c32ae8122f2"
+    'x-rapidapi-key': "4d9722c621b948f9b2c1f1dd88067f68"
 }
 
 
 """ --- Global functions --- """
 
+
+def getAverage(list):
+    return statistics.mean(list)
+
+def sort_dict_by_key(unsorted_dict):
+    sorted_keys = sorted(unsorted_dict.keys(), key=lambda x:x.lower())
+    sorted_dict= {}
+    for key in sorted_keys:
+        sorted_dict.update({key: unsorted_dict[key]})
+    return sorted_dict
 
 def allCountries():
     global match
@@ -83,6 +96,15 @@ def teamsStats(x):
     jsonData = json.loads((data.decode("utf-8")))
     return jsonData
 
+def allCompo(x):
+    global match
+    API_FOOT_ENDPOINT.request(
+        "GET", "/teams/fixtures/lineups?fixture="+x, headers=headers)
+    res = API_FOOT_ENDPOINT.getresponse()
+    data = res.read()
+    API_FOOT_ENDPOINT.close()
+    jsonData = json.loads((data.decode("utf-8")))
+    return jsonData
 
 def headToHead(x, y):
     global match
@@ -155,6 +177,11 @@ def get_headtohead():
 @app.route('/api/v1.0/leagues', methods=['GET'])
 def get_leagues():
     return allLeagues()
+
+@app.route('/api/v1.0/compo', methods=['GET'])
+def get_compo():
+    matchid = request.args.get('matchid')
+    return allCompo(matchid)
 
 
 @app.route('/api/v1.0/connection', methods=['POST'])
