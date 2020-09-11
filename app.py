@@ -6,7 +6,6 @@ import jwt
 from flask_cors import CORS
 
 
-
 """ --- Connection at DB --- """
 
 client = MongoClient('localhost', 27017)
@@ -17,8 +16,10 @@ users = db['users']
 """ --- Declare global variable --- """
 
 app = Flask(__name__)
+
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
 match = None
 API_FOOT_ENDPOINT = http.client.HTTPSConnection("v3.football.api-sports.io")
 headers = {
@@ -28,6 +29,8 @@ headers = {
 
 
 """ --- Global functions --- """
+
+
 def allCountries():
     global match
     API_FOOT_ENDPOINT.request("GET", "/countries", headers=headers)
@@ -37,9 +40,11 @@ def allCountries():
     jsonData = json.loads((data.decode("utf-8")))
     return jsonData
 
+
 def ranking():
     global match
-    API_FOOT_ENDPOINT.request("GET", "/standings?league=61&season=2020", headers=headers)
+    API_FOOT_ENDPOINT.request(
+        "GET", "/standings?league=61&season=2020", headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
     API_FOOT_ENDPOINT.close()
@@ -49,7 +54,8 @@ def ranking():
 
 def nextMeet():
     global match
-    API_FOOT_ENDPOINT.request("GET", "/fixtures?league=61&season=2020", headers=headers)
+    API_FOOT_ENDPOINT.request(
+        "GET", "/fixtures?league=61&season=2020", headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
     API_FOOT_ENDPOINT.close()
@@ -69,7 +75,8 @@ def allLeagues():
 
 def teamsStats(x):
     global match
-    API_FOOT_ENDPOINT.request("GET", "/teams/statistics?league=61&season=2020&team="+x, headers=headers)
+    API_FOOT_ENDPOINT.request(
+        "GET", "/teams/statistics?league=61&season=2020&team="+x, headers=headers)
     res = API_FOOT_ENDPOINT.getresponse()
     data = res.read()
     API_FOOT_ENDPOINT.close()
@@ -90,25 +97,28 @@ def headToHead(x, y):
 
 def connection(username, password):
     checkUser = users.find_one({'username': username})
-    
-    if checkUser.get('password') == password:
-        valueReturn = jwt.encode({'some': 'payload'}, 'secret', algorithm='HS256')
-    else:
-        return {"result":"error"}
 
-    return valueReturn
+    if checkUser.get('password') == password:
+        valueReturn = jwt.encode(
+            {'some': 'payload'}, 'secret', algorithm='HS256')
+    else:
+        return {"result": "error"}
+
+    return {'result': str(valueReturn)}
 
 
 def inscription(username, password):
     if username != None and password != None:
         users.insert_one(
             {"username": username, "password": password})
-        return {"result":"added"}
+        return {"result": "added"}
     else:
-        return {"result":"error"}
+        return {"result": "error"}
 
 
 """ --- Routes --- """
+
+
 @app.route('/')
 def index():
     return "Server run !"
@@ -129,6 +139,7 @@ def teams_stats():
 def get_countries():
     return allCountries()
 
+
 @app.route('/api/v1.0/ranking', methods=['GET'])
 def get_ranking():
     return ranking()
@@ -138,7 +149,7 @@ def get_ranking():
 def get_headtohead():
     team1 = request.args.get('team1')
     team2 = request.args.get('team2')
-    return headToHead(team1,team2)
+    return headToHead(team1, team2)
 
 
 @app.route('/api/v1.0/leagues', methods=['GET'])
